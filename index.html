@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>krpano multi to normal res converter</h1>
+    <p>This tool takes a tour.xml from a multires or normal config and converts it to a tour.xml for the other config.</p>
+    <p>From the multires it removes the `/%s/l%l/%v/l%l_%s_%v_%h.jpg` and multires-Attribute and changes it to `/pano_%s.jpg` in the cube-tag.</p>
+    <h3>DISCLAIMER: This tool is working with 100% pure Javascript, nothing gets saved or transmitted. Always make a backup of your `tour.xml` before using the output of this tool!</h3>
+    <br>
+    <textarea id="multires" cols="100" rows="10" placeholder="Multires Tour XML"></textarea>
+    <div style="display: inline-block">
+      <button onclick="convert()">Convert to Normalres >>></button>
+      <br>
+      <button onclick="reconvert()"><<< Convert to Multires</button>
+    </div>
+    <textarea id="normal" cols="100" rows="10" placeholder="Normal Tour XML"></textarea>
+
+    <script>
+      function convert() {
+        let tourxml = document.getElementById("multires").value;
+
+        if (tourxml === "") {
+          alert("Please enter XML");
+          return;
+        }
+
+        let oldHotspotPosition = 0;
+
+        while (tourxml.indexOf("<cube", oldHotspotPosition) !== -1) {
+          let hotspotPosition = tourxml.indexOf("<cube", oldHotspotPosition);
+          let hotspotEndPosition = tourxml.indexOf("\" />", hotspotPosition);
+          let hotspotLength = hotspotEndPosition - hotspotPosition + 4;
+          let oldHotspot = tourxml.substring(hotspotPosition, hotspotPosition + hotspotLength);
+          let hotspot = oldHotspot.replace("%s/l%l/%v/l%l_%s_%v_%h.jpg\" multires=\"512,768,1536,2816\" />", "pano_%s.jpg\" />");
+
+          tourxml = tourxml.replace(oldHotspot, hotspot);
+
+          oldHotspotPosition = hotspotEndPosition;
+        }
+
+        document.getElementById("normal").value = tourxml;
+      }
+
+      function reconvert() {
+        let tourxml = document.getElementById("normal").value;
+
+        if (tourxml === "") {
+          alert("Please enter XML");
+          return;
+        }
+
+        let oldHotspotPosition = 0;
+
+        while (tourxml.indexOf("<cube", oldHotspotPosition) !== -1) {
+          let hotspotPosition = tourxml.indexOf("<cube", oldHotspotPosition);
+          let hotspotEndPosition = tourxml.indexOf("\" />", hotspotPosition);
+          let hotspotLength = hotspotEndPosition - hotspotPosition + 4;
+          let oldHotspot = tourxml.substring(hotspotPosition, hotspotPosition + hotspotLength);
+          let hotspot = oldHotspot.replace( "pano_%s.jpg\" />", "%s/l%l/%v/l%l_%s_%v_%h.jpg\" multires=\"512,768,1536,2816\" />");
+
+          tourxml = tourxml.replace(oldHotspot, hotspot);
+
+          oldHotspotPosition = hotspotEndPosition;
+        }
+
+        document.getElementById("multires").value = tourxml;
+      }
+    </script>
+</body>
+</html>

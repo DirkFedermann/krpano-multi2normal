@@ -1,0 +1,9 @@
+# krpano-multi2normal
+
+This tool takes a tour.xml from a multires or normal config and converts it to a tour.xml for the other config.
+
+From the multires it removes the `/%s/l%l/%v/l%l_%s_%v_%h.jpg` and multires-Attribute and changes it to `/pano_%s.jpg` in the cube-tag
+
+From the normal to multires, it takes the `/pano_%s.jpg`, changes it to `/%s/l%l/%v/l%l_%s_%v_%h.jpg` and adds back the multires-Attribute with the default `512,768,1536,2816` value.
+
+Yes, this tool could've been a search&replace in a text editor but I like to have this in one place to use and not to remember what to take away and to change.
